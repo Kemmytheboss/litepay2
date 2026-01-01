@@ -14,3 +14,11 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"status": "LitePay backend running"}
+
+from app.db.session import engine
+from app.db.base import Base
+
+@app.on_event("startup")
+def test_db():
+    Base.metadata.create_all(bind=engine)
+    print("Database tables created or verified.")
