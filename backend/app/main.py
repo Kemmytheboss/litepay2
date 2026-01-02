@@ -1,7 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.db.session import engine
+from app.db.base import Base
+from app.api import auth, admin
+
 app = FastAPI(title="LitePay API")
+
+app.include_router(auth.router)
+app.include_router(admin.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,8 +22,7 @@ app.add_middleware(
 def root():
     return {"status": "LitePay backend running"}
 
-from app.db.session import engine
-from app.db.base import Base
+
 
 @app.on_event("startup")
 def test_db():
